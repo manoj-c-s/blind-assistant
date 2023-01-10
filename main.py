@@ -76,8 +76,7 @@ while True:
         driver.switch_to.window(window_list[-1])
         driver.get('https://gmail.com')
      
-        # email = 'manojcs123456@gmail.com\n'  
-        # password = 'man@123456'
+      
         # wait=WebDriverWait(driver,20)
         # url="https://accounts.google.com/ServiceLogin"
         # driver.get(url)
