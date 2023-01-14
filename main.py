@@ -12,13 +12,13 @@ from selenium.webdriver.chrome.service import Service
 
 
 option = Options()
-option.add_experimental_option("debuggerAddress","localhost:9222")
+# option.add_experimental_option("debuggerAddress","localhost:9222")
 # driver=uc.Chrome(use_subprocess=True)
 ser = Service("C:\\Users\\manoj\Desktop\\voice-assistant-main\\chromedriver.exe")
 # op = webdriver.ChromeOptions()
 driver = webdriver.Chrome(service=ser, options=option)
 
-# driver.maximize_window()
+driver.maximize_window()
 
 engine = pyttsx3.init()
 voices = engine.getProperty('voices')
@@ -41,10 +41,11 @@ def recognize_speech():
     except:
         response = "Error"
     return response
+   
 time.sleep(3)
 speak("Hello master! I am now online..")
 while True:
-    speak("How can I help you?")
+    speak("Speak now")
     voice = recognize_speech().lower()
     print(voice)
     if 'open google' in voice:
@@ -74,9 +75,34 @@ while True:
         driver.execute_script("window.open('');")
         window_list = driver.window_handles
         driver.switch_to.window(window_list[-1])
-        driver.get('https://gmail.com')
-     
-      
+        # driver.get('https://gmail.com')
+        driver.get('http://localhost:3000/')
+        while True:
+            speak('tell me email..')
+            query2 = recognize_speech()
+            if query2 != 'Error':
+                break
+        element =  driver.find_element(By.NAME,'email')
+        element.clear()
+        element.send_keys(query2)
+        while True:
+            speak('tell me subject..')
+            query = recognize_speech()
+            if query != 'Error':
+                break
+        element =  driver.find_element(By.NAME,'subject')
+        element.clear()
+        element.send_keys(query)
+        while True:
+            speak('tell me message..')
+            query3 = recognize_speech()
+            if query3 != 'Error':
+                break
+        element =  driver.find_element(By.NAME,'message')
+        element.clear()
+        element.send_keys(query3)
+        submit = driver.find_element(By.NAME,"submit");
+        submit.click();
         # wait=WebDriverWait(driver,20)
         # url="https://accounts.google.com/ServiceLogin"
         # driver.get(url)
@@ -119,4 +145,4 @@ while True:
         break
     else:
         speak('Not a valid command. Please try again.')
-    time.sleep(2)
+    time.sleep(1)
