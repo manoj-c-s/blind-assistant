@@ -85,7 +85,6 @@ def gmail():
     time.sleep(6)
     while True:
         speak("Choose and speak out the option number for the task you want to perform. Say 1 to compose new mail. Say 2 to read inbox mails. Say 3 to read sent mails. Say exit to quit mail")
-
         speak("Speak now")
         choice = speech_to_text()
 
@@ -95,11 +94,11 @@ def gmail():
                 speak("Your choice is 1. To compose mail")
                 composeMail()
             
-            elif choice == '2' or choice.lower() == 'too' or choice.lower() == 'two' or choice.lower() == 'to' or choice.lower() == 'tu':
+            elif choice == '2' or choice.lower() == 'too' or choice.lower() == 'two' or choice.lower() == 'to' or  choice.lower() == 'tu' or choice.lower() == 'inbox':
                 speak("Your choice is 2. To read inbox mails")
                 readInbox()
                 
-            elif choice == '3' or choice.lower() == 'tree' or choice.lower() == 'three':
+            elif choice == '3' or choice.lower() == 'tree' or choice.lower() == 'three'or choice.lower()=='free':
                 speak("Your choice is 3. To read sent mails")
                 readSentMail()
 
@@ -117,27 +116,79 @@ def composeMail():
     speak("Mention the gmail ID of the persons to whom you want to send a mail.")
     speak("speak")
     receivers = speech_to_text()
-    speak("The mail will be send to " +(receivers.lower()) )
-    element.send_keys(receivers.lower())
+    em=''
+    if receivers:  
+      for email in receivers:
+         em =em+email.replace(" ", "")
+      em=em+"@gmail.com"
+      speak("The mail will be send to " +(em.lower()) )
+      element.send_keys(em.lower())
+    else :
+        speak("email not valid , please try from 1st step")
 
 
     element = driver.find_element(By.CLASS_NAME, 'composeSubject')
     element.clear()
-    while True:
-        speak("Tell me the subject...")
-        speak("Speak")
-        sub = speech_to_text()
-        speak("You said  " + sub)
-        element.send_keys(sub)
-        speak("Say your message")
-        speak("Speak")
-        msg = speech_to_text()
-        speak("You said  " + msg)
-        submit = driver.find_element(By.CLASS_NAME,"compose__btn");
-        submit.click();
-        speak("Message sent")
-        return 0
-            
+    speak("Tell me the subject...")
+    speak("Speak")
+    sub = speech_to_text()
+    speak("You said  " + sub)
+    element.send_keys(sub)
+    element = driver.find_element(By.CLASS_NAME, 'composeMsg')
+    element.clear()
+    speak("Say your message")
+    speak("Speak")
+    msg = speech_to_text()
+    speak("You said  " + msg)
+    element.send_keys(msg)
+    submit = driver.find_element(By.CLASS_NAME,"compose__btn");
+    submit.click()
+    speak("Message sent")
+    return 0
+
+def readSentMail():
+     element = driver.find_element(By.ID, 'sent')
+     element.click()
+     speak("sent message page is displaying ")
+     element = driver.find_element(By.ID, "2")
+     while element:
+        #  speak("select number of senders name to read out")
+        #  num= 5
+        #  for i in range(int(num)): 
+        #     element = driver.find_element(By.ID, 'subject')
+        #     speak(element.text)
+        #     i=i+1
+        #  element = driver.find_element(By.ID, 'subject')
+         ele=element.text.split('- ')
+         speak("reciever email is "+ele[1]+"@gmail.com")
+         speak("subject is "+ele[2])
+         speak("message is "+ele[3])
+         speak("Date and time when it sent is "+ele[4])
+         return 0
+
+def readInbox():
+     element = driver.find_element(By.ID, 'inbox')
+     element.click()    
+     speak("inbox page is displaying ")
+     speak("Which day mail do you want to read Out")
+     num= "2"
+     element = driver.find_element(By.ID, num)
+     while element:
+        #  speak("select number of senders name to read out")
+        #  num= 5
+        #  for i in range(int(num)): 
+        #     element = driver.find_element(By.ID, 'subject')
+        #     speak(element.text)
+        #     i=i+1
+        #  element = driver.find_element(By.ID, 'subject')
+         ele=element.text.split('- ')
+         speak("sender email is "+ele[0]+"@gmail.com")
+         speak("subject is "+ele[2])
+         speak("message is "+ele[3])
+         speak("Date and time when it recieved is "+ele[4])
+         return 0
+
+
 time.sleep(3)
 speak("Hello master! I am now online..")
 if EMAIL_ID == "" and PASSWORD == "":
